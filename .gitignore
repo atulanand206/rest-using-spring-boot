@@ -8,7 +8,13 @@ pom.xml.next
 release.properties
 dependency-reduced-pom.xml
 buildNumber.properties
-.mvn/timing.properties
+HELP.md
+target/
+!**/src/main/**/target/
+!**/src/test/**/target/
+!**/.mvn/
+!**/mvnw
+!**/mvnw.cmd
 
 # Avoid ignoring Maven wrapper jar file (.jar files are usually ignored)
 !/.mvn/wrapper/maven-wrapper.jar
@@ -46,6 +52,30 @@ buildNumber.properties
 
 # IntelliJ
 /out/
+.idea
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
 
 # mpeltonen/sbt-idea plugin
 .idea_modules/
