@@ -29,4 +29,11 @@ public interface IUserService {
      * @param userDto contains the new information for the User.
      */
     void updateUser(UUID id, UserDto userDto);
+
+    /**
+     * Deletes the user.
+     *
+     * @param id userId of the user to be deleted.
+     */
+    void deleteUser(UUID id);
 }
