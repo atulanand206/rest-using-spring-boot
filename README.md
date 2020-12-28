@@ -1,12 +1,6 @@
----
-description: >-
-  This is a guide to develop a server side application using Spring boot and
-  tested using JUnit.
----
+# Features in the application
 
-# Introduction
-
-## Features in the application
+This is a guide to develop a server side application using Spring boot and tested using JUnit.
 
 For the purposes of this project, we would be developing a Spring Boot service with following requirements:
 
