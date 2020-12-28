@@ -1,10 +1,10 @@
 # Delete User
 
-## Project Status
+## Project Recap
 
-Only Delete operation among the User CRUD is left to be implemented.
+The three pillars of CRUD are now working. Only the final pillar, viz. delete operation among the User CRUD is left to be implemented.
 
-## Write the test first
+## Write a new test
 
 ```java
 @Test
@@ -22,7 +22,7 @@ void testDeleteUserWhenIdIsNull() {
 [ERROR]   location: variable fUserService of type com.atul.gitbook.learn.users.service.IUserService
 ```
 
-### Let's try to pass the test
+### Let's try to resolve the failure
 
 Let's declare the deleteUser\(\) method in the interface and implement it in the service.
 
@@ -60,7 +60,7 @@ public void deleteUser(UUID id) {
 
 If you'd run the test, the tests should be passing now.
 
-## Write the test first
+## Write a new test
 
 ```java
 @Test
@@ -76,7 +76,7 @@ void testDeleteUserWhenUserIsNotPresent() {
 [ERROR]   UserServiceTest.testDeleteUserWhenUserIsNotPresent:109 Expected java.util.NoSuchElementException to be thrown, but nothing was thrown.
 ```
 
-### Let's try to pass the test
+### Let's try to resolve the failure
 
 We can throw the NoSuchElementException.
 
@@ -90,7 +90,7 @@ public void deleteUser(UUID id) {
 
 The tests should be passing now.
 
-## Write the test first
+## Write a new test
 
 ```java
 @Test
@@ -108,7 +108,7 @@ void testDeleteUser() {
 [ERROR]   UserServiceTest.testDeleteUser:116 Unexpected exception thrown: java.util.NoSuchElementException
 ```
 
-### Let's try to pass the test
+### Let's try to resolve the failure
 
 We can loop through the users and return from the method once the item is present in the system and is deleted.
 
@@ -127,4 +127,8 @@ public void deleteUser(UUID id) {
 ```
 
 The tests should be passing now.
+
+## Project Status
+
+User CRUD is now complete. We are now confident that we can manipulate the users in the system in tests at the moment. We will be exposing external controllers in the coming chapters which would make the service accessible on an URL.
 

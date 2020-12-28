@@ -1,6 +1,8 @@
 # Table of contents
 
-* [Understanding the requirements](README.md)
+* [Introduction](README.md)
+* [Why we write testable software](why-we-write-testable-software.md)
+* [Design decisions](design-decisions.md)
 * [Setting up the project](setting-up-the-project.md)
 
 ## User Service
@@ -14,7 +16,7 @@
 
 ---
 
-* [Create Notes API](create-notes-api.md)
-* [Database considerations](database-considerations.md)
 * [API Information](api-information.md)
+* [Database considerations](database-considerations.md)
+* [Create Notes API](create-notes-api.md)
 
