@@ -1,10 +1,7 @@
----
-description: >-
-  This section deals with developing the User Service which will be dealing with
-  the users in the system.
----
-
 # User Service
+
+This section deals with developing the User Service which will be dealing with
+  the users in the system.
 
 ## The process of development in a nutshell.
 
@@ -13,9 +10,7 @@ description: >-
 3. Implement rest controllers for the clients to interact with the system.
 4. Scale the repository to use a persistent database.
 
-{% hint style="info" %}
-CRUD: Create Read Update Delete
-{% endhint %}
+## CRUD: Create Read Update Delete
 
 Before any server side application is developed we should look towards establishing the model definition so that it would be easier to implement. The models can initially be minimal and has full freedom to be expanded later but the minimum design level fields must be defined on top of which the architecture would be built. We'll be defining them now.
 
@@ -23,13 +18,11 @@ Once we have the service refactored to begin interacting with the world, we will
 
 ## Test driven philosophy
 
-{% hint style="info" %}
 The three laws of TDD:
 
 * Write production code only to pass a failing unit test.
 * Write no more of a unit test than sufficient to fail \(compilation failures are failures\).
 * Write no more production code than necessary to pass the one failing unit test.
-{% endhint %}
 
 
 

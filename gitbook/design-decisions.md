@@ -23,8 +23,3 @@ To get the domain logic working, we would require a domain model with which we c
 Once we have the domain service working, we will looking to expose controllers with which users can interact with the system. These controllers can be used by web and mobile clients to perform actions in a sensible fashion. The controllers act as a wrapper between the external world and domain service. It also acts as a security layer and invalid requests can be prevented to reach the domain service in the controller itself.
 
 Having an in-memory database means that it will start up fresh and without any data every time the service launches. It's not feasible to keep the system running at all times. Any service outage will delete all the data in the system. Also, there can be too many service requests if queried from an in-memory database and the service can be denied fairly quickly. The users wouldn't like that and the application won't be scaled. We would be replacing that database with a persistent one and resolve these issues.
-
-The implementation would be done in a Test Driven fashion to never take on huge responsibility and keep delivering software in small increments. The test and production code would be refactor several times and it may feel useless at times but in the end, it will all lead to a robust system and after all that's what every stakeholder wants.
-
-
-

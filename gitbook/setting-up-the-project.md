@@ -4,7 +4,7 @@
 
 Spring boot uses Maven for dependency management and Maven defines them in a pom file. Let's begin by creating a spring module using Spring Initializr\(https://start.spring.io\). 
 
-![Project Metadata entries](.gitbook/assets/project-metadata-setup.png)
+![Project Metadata entries](../.gitbook/assets/project-metadata-setup.png)
 
 After entering the project metadata, you should have a pom file like the following. Spring Initializr adds a couple of dependencies as the starter kit.
 
