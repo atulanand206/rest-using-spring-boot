@@ -1,10 +1,12 @@
 package com.atul.gitbook.learn;
 
+import com.atul.gitbook.learn.exceptions.ServiceException;
 import com.atul.gitbook.learn.users.models.UserError;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageConversionException;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -15,7 +17,6 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.time.Instant;
-import java.util.NoSuchElementException;
 
 @ControllerAdvice
 public class ServiceExceptionHandler extends ResponseEntityExceptionHandler {
@@ -26,8 +27,9 @@ public class ServiceExceptionHandler extends ResponseEntityExceptionHandler {
             final WebRequest request) {
         final var rootCause = getExceptionRootCause(ex);
         final var message = rootCause != null ? rootCause.getMessage() : "";
-        if (rootCause instanceof NoSuchElementException)
-            return createErrorResponse(message, request, HttpStatus.NOT_FOUND);
+        if (ex instanceof ServiceException) {
+            return createErrorResponse(message, request, ((ServiceException) ex).getStatus());
+        }
         return createErrorResponse(message, request, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 

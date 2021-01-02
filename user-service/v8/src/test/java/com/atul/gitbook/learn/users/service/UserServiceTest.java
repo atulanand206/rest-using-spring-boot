@@ -1,6 +1,6 @@
 package com.atul.gitbook.learn.users.service;
 
-import com.atul.gitbook.learn.users.TestBase;
+import com.atul.gitbook.learn.TestBase;
 import com.atul.gitbook.learn.users.models.UserDto;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -13,26 +13,28 @@ import java.util.NoSuchElementException;
 import java.util.UUID;
 import java.util.stream.Stream;
 
-class UserServiceTest extends TestBase {
+import static com.atul.gitbook.learn.users.service.impl.InMemoryRepository.ADMINISTRATOR;
+
+class UserServiceTest extends TestBase{
 
     @Autowired
     IUserService fUserService;
 
     @Test
     void testCreateUserWhenDtoIsNull() {
-        Assertions.assertThrows(IllegalArgumentException.class, () -> fUserService.createUser(null));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> fUserService.createUser(null, null));
     }
 
     @Test
     void testCreateUserWhenDtoContainsAllTheFields() {
         final var userDto = new UserDto("Ramsay", "9876483456", "abc@gmail.com");
-        Assertions.assertDoesNotThrow(() -> fUserService.createUser(userDto));
+        Assertions.assertDoesNotThrow(() -> fUserService.createUser(ADMINISTRATOR.getId(), userDto));
     }
 
     @Test
     void testCreateUser() {
         final var expected = new UserDto("Ramsay", "9876483456", "abc@gmail.com");
-        final var actual = fUserService.createUser(expected);
+        final var actual = fUserService.createUser(ADMINISTRATOR.getId(), expected);
         Assertions.assertEquals(expected.getName(), actual.getName());
         Assertions.assertEquals(expected.getPhone(), actual.getPhone());
         Assertions.assertEquals(expected.getEmail(), actual.getEmail());
@@ -40,19 +42,19 @@ class UserServiceTest extends TestBase {
 
     @Test
     void testGetUserWhenIdIsNull() {
-        Assertions.assertThrows(IllegalArgumentException.class, () -> fUserService.getUser(null,null));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> fUserService.getUser(null));
     }
 
     @Test
     void testGetUserWhenUserIsNotPresent() {
-        Assertions.assertThrows(NoSuchElementException.class, () -> fUserService.getUser(UUID.randomUUID(), UUID.randomUUID()));
+        Assertions.assertThrows(NoSuchElementException.class, () -> fUserService.getUser(UUID.randomUUID()));
     }
 
     @Test
     void testGetUser() {
         final var userDto = new UserDto("Ramsay", "9876483456", "abc@gmail.com");
-        final var expected = fUserService.createUser(userDto);
-        final var actual = fUserService.getUser(expected.getId(), expected.getId());
+        final var expected = fUserService.createUser(ADMINISTRATOR.getId(), userDto);
+        final var actual = fUserService.getUser(expected.getId());
         Assertions.assertEquals(expected.getId(), actual.getId());
         Assertions.assertEquals(expected.getName(), actual.getName());
         Assertions.assertEquals(expected.getPhone(), actual.getPhone());
@@ -81,13 +83,13 @@ class UserServiceTest extends TestBase {
     @Test
     void testUpdateUser() {
         final var userDto = new UserDto("Ramsay", "9876483456", "abc@gmail.com");
-        final var user = fUserService.createUser(userDto);
+        final var user = fUserService.createUser(ADMINISTRATOR.getId(), userDto);
         final var newName = "Abc";
         final var newPhone = "7583929275";
         final var newEmail = "rewr@afsa.com";
         final var newUserDto = new UserDto(newName, newPhone, newEmail);
         fUserService.updateUser(user.getId(), newUserDto);
-        final var actual = fUserService.getUser(user.getId(), user.getId());
+        final var actual = fUserService.getUser(user.getId());
         Assertions.assertEquals(user.getId(), actual.getId());
         Assertions.assertEquals(newName, actual.getName());
         Assertions.assertEquals(newPhone, actual.getPhone());
@@ -107,8 +109,8 @@ class UserServiceTest extends TestBase {
     @Test
     void testDeleteUser() {
         final var userDto = new UserDto("Ramsay", "9876483456", "abc@gmail.com");
-        final var user = fUserService.createUser(userDto);
+        final var user = fUserService.createUser(ADMINISTRATOR.getId(), userDto);
         Assertions.assertDoesNotThrow(() -> fUserService.deleteUser(user.getId()));
-        Assertions.assertThrows(NoSuchElementException.class, () -> fUserService.getUser(user.getId(), user.getId()));
+        Assertions.assertThrows(NoSuchElementException.class, () -> fUserService.getUser(user.getId()));
     }
 }

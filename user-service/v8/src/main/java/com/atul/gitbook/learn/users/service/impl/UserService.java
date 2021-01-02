@@ -1,10 +1,16 @@
 package com.atul.gitbook.learn.users.service.impl;
 
+import com.atul.gitbook.learn.exceptions.ForbiddenException;
+import com.atul.gitbook.learn.exceptions.UnauthorizedException;
 import com.atul.gitbook.learn.users.models.User;
 import com.atul.gitbook.learn.users.models.UserDto;
 import com.atul.gitbook.learn.users.service.IUserRepository;
 import com.atul.gitbook.learn.users.service.IUserService;
+import org.springframework.web.client.HttpClientErrorException;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.UUID;
 
 import static com.atul.gitbook.learn.Preconditions.validateNotNull;
@@ -18,16 +24,23 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public User createUser(UserDto userDto) {
+    public User createUser(UUID requesterId, UserDto userDto) {
+        validateNotNull(requesterId);
         validateNotNull(userDto);
+        try {
+            final var user = fUserRepository.getUser(requesterId);
+            if (!user.isAdministrator())
+                throw new ForbiddenException("Requester is not an administrator and cannot request user creation.");
+        } catch (NoSuchElementException e) {
+            throw new UnauthorizedException("Requester is not present.");
+        }
         return fUserRepository.createUser(userDto);
     }
 
     @Override
-    public User getUser(UUID requesterId, UUID userId) {
-        validateNotNull(requesterId);
-        validateNotNull(userId);
-        return fUserRepository.getUser(userId);
+    public User getUser(UUID id) {
+        validateNotNull(id);
+        return fUserRepository.getUser(id);
     }
 
     @Override
