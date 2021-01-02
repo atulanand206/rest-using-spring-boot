@@ -20,6 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class ControllerTest extends TestBase {
 
     private static final String CREATE_USER = "/v1/%s/user";
+    private static final String GET_USER = "/v1/%s/user/%s";
 
     @Autowired
     private WebApplicationContext fAppContext;
@@ -63,6 +64,54 @@ class ControllerTest extends TestBase {
         fMockMvc.perform(MockMvcRequestBuilders
                 .post(String.format(CREATE_USER, ADMINISTRATOR.getId()))
                 .content(userDto.toString())
+                .contentType(APPLICATION_JSON))
+                .andExpect(status().is2xxSuccessful());
+    }
+
+    @Test
+    void testGetUserWhenRequesterIsNull() throws Exception {
+        fMockMvc.perform(MockMvcRequestBuilders
+                .get(String.format(GET_USER, null, null))
+                .contentType(APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void testGetUserWhenUserIdIsNull() throws Exception {
+        fMockMvc.perform(MockMvcRequestBuilders
+                .get(String.format(GET_USER, UUID.randomUUID(), null))
+                .contentType(APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void testGetUserWhenRequesterDoesNotExist() throws Exception {
+        fMockMvc.perform(MockMvcRequestBuilders
+                .get(String.format(GET_USER, UUID.randomUUID(), UUID.randomUUID()))
+                .contentType(APPLICATION_JSON))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void testGetUserWhenRequesterIsDifferentFromUser() throws Exception {
+        fMockMvc.perform(MockMvcRequestBuilders
+                .get(String.format(GET_USER, USER.getId(), UUID.randomUUID()))
+                .contentType(APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void testGetUserWhenRequesterIsFetchingOwnDetails() throws Exception {
+        fMockMvc.perform(MockMvcRequestBuilders
+                .get(String.format(GET_USER, USER.getId(), USER.getId()))
+                .contentType(APPLICATION_JSON))
+                .andExpect(status().is2xxSuccessful());
+    }
+
+    @Test
+    void testGetUserWhenRequesterIsAdministratorAndUserIsPresent() throws Exception {
+        fMockMvc.perform(MockMvcRequestBuilders
+                .get(String.format(GET_USER, ADMINISTRATOR.getId(), USER.getId()))
                 .contentType(APPLICATION_JSON))
                 .andExpect(status().is2xxSuccessful());
     }

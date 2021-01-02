@@ -6,10 +6,7 @@ import com.atul.gitbook.learn.users.models.User;
 import com.atul.gitbook.learn.users.models.UserDto;
 import com.atul.gitbook.learn.users.service.IUserRepository;
 import com.atul.gitbook.learn.users.service.IUserService;
-import org.springframework.web.client.HttpClientErrorException;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 
@@ -38,9 +35,22 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public User getUser(UUID id) {
-        validateNotNull(id);
-        return fUserRepository.getUser(id);
+    public User getUser(UUID requesterId, UUID userId) {
+        validateNotNull(requesterId);
+        validateNotNull(userId);
+        User requester;
+        try {
+            requester = fUserRepository.getUser(requesterId);
+        } catch (NoSuchElementException e) {
+            throw new UnauthorizedException("Requester is not present.");
+        }
+        if (requester.isAdministrator()) {
+            return fUserRepository.getUser(userId);
+        }
+        if (!requesterId.equals(userId)) {
+            throw new ForbiddenException("User can only request own profile details.");
+        }
+        return fUserRepository.getUser(userId);
     }
 
     @Override
