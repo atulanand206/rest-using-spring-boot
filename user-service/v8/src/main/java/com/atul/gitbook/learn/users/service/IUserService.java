@@ -19,9 +19,10 @@ public interface IUserService {
     /**
      * Returns the user with the provided userId.
      *
-     * @param id the userId of the user being queried.
+     * @param requesterId the userId of the user making the request.
+     * @param userId the userId of the user being queried.
      */
-    User getUser(UUID id);
+    User getUser(UUID requesterId, UUID userId);
 
     /**
      * Updates the user.
