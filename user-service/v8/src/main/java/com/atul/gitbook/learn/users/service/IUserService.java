@@ -10,18 +10,18 @@ public interface IUserService {
     /**
      * Creates and returns a new user.
      *
+     * @param requesterId id of the user making the request
      * @param userDto contains the necessary information for the User.
      * @return the created user
      */
-    User createUser(UserDto userDto);
+    User createUser(UUID requesterId, UserDto userDto);
 
     /**
      * Returns the user with the provided userId.
      *
-     * @param requesterId the userId of the user making the request.
-     * @param userId the userId of the user being queried.
+     * @param id the userId of the user being queried.
      */
-    User getUser(UUID requesterId, UUID userId);
+    User getUser(UUID id);
 
     /**
      * Updates the user.

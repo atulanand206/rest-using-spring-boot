@@ -1,8 +1,10 @@
 package com.atul.gitbook.learn.users.service;
 
 import com.atul.gitbook.learn.users.models.User;
-import org.springframework.web.bind.annotation.GetMapping;
+import com.atul.gitbook.learn.users.models.UserDto;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.UUID;
@@ -16,9 +18,9 @@ public class UserController {
         this.fUserService = userService;
     }
 
-    @GetMapping("/v1/{requesterId}/users/{userId}")
-    public User getUser(@PathVariable("requesterId") UUID requesterId,
-                        @PathVariable("userId") UUID userId) {
-        return fUserService.getUser(requesterId, userId);
+    @PostMapping("/v1/{requesterId}/user")
+    public User createUser(@PathVariable("requesterId") UUID requesterId,
+                           @RequestBody UserDto userDto) {
+        return fUserService.createUser(requesterId, userDto);
     }
 }

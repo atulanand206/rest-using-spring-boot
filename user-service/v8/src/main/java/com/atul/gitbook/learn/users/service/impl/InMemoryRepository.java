@@ -13,9 +13,14 @@ import static com.atul.gitbook.learn.Preconditions.validateNotNull;
 
 public class InMemoryRepository implements IUserRepository {
 
-    private static final String ERROR_GET_USER = "User %s not found.";
-
+    public static User ADMINISTRATOR = new User(UUID.fromString("f994c61d-ebd1-463c-a8d8-ebe5989aa501"), "King Kong", "9999999999", "king@kong.com", true);
+    public static User USER = new User(UUID.fromString("1109a8c8-49a3-4921-aa80-65e730d587fe"), "David Marshal", "9999999999", "david@marshall.com", false);
     private List<User> users = new ArrayList<>();
+
+    public InMemoryRepository() {
+        users.add(ADMINISTRATOR);
+        users.add(USER);
+    }
 
     @Override
     public User createUser(UserDto userDto) {
@@ -32,7 +37,7 @@ public class InMemoryRepository implements IUserRepository {
             if (id.equals(user.getId()))
                 return user;
         }
-        throw new NoSuchElementException(String.format(ERROR_GET_USER, id));
+        throw new NoSuchElementException();
     }
 
     @Override
