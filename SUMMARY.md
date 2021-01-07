@@ -13,7 +13,14 @@
   * [Update User](user-service/user-service/update-user.md)
   * [Delete User](user-service/user-service/delete-user.md)
   * [Repository Layer](user-service/user-service/repository-layer.md)
-  * [GET Controller](user-service/user-service/get-controller.md)
+  * [Create User Endpoint](user-service/user-service/create-controller.md)
+  * [Get User Details Endpoint](user-service/user-service/get-controller.md)
+  * [Update User Details Endpoint](user-service/user-service/update-user-details-endpoint.md)
+  * [Delete User Endpoint](user-service/user-service/delete-user-endpoint.md)
+  * [Refactor ControllerTest](user-service/user-service/refactor-controllertest.md)
+  * [Serialization Utils](user-service/user-service/serialization-utils.md)
+  * [Removing Service Dependency](user-service/user-service/removing-service-dependency.md)
+  * [Refactoring Service Validations](user-service/user-service/refactoring-service-validations.md)
 
 ---
 
