@@ -6,8 +6,10 @@ import com.atul.gitbook.learn.users.service.impl.InMemoryRepository;
 import com.atul.gitbook.learn.users.service.impl.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 
 @Configuration
+@Import(DataSourceConfig.class)
 public class AppConfig {
 
     @Bean
