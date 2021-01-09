@@ -11,7 +11,7 @@
 	<groupId>com.atul.gitbook</groupId>
 	<artifactId>learn</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>Learn Spring Boot</name>
+	<name>Learn Spring Boot v4</name>
 	<description>Spring boot project using Test Driven Development</description>
 
 	<properties>
