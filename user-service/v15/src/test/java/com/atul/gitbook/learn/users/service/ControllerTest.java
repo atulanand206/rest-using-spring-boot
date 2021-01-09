@@ -85,14 +85,28 @@ class ControllerTest extends TestBase {
 
     @Test
     void testGetUserWhenRequesterIsFetchingOwnDetails() throws Exception {
-        fMockMvc.perform(getUserRequest(USER.getId(), USER.getId()))
-                .andExpect(status().is2xxSuccessful());
+        final var expected = USER;
+        final var contentAsString = fMockMvc.perform(getUserRequest(expected.getId(), expected.getId()))
+                .andExpect(status().is2xxSuccessful())
+                .andReturn().getResponse().getContentAsString();
+        final var actual = USER_SERIALIZER.deserialize(contentAsString);
+        Assertions.assertEquals(expected.getId(), actual.getId());
+        Assertions.assertEquals(expected.getName(), actual.getName());
+        Assertions.assertEquals(expected.getPhone(), actual.getPhone());
+        Assertions.assertEquals(expected.getEmail(), actual.getEmail());
     }
 
     @Test
     void testGetUserWhenRequesterIsAdministratorAndUserIsPresent() throws Exception {
-        fMockMvc.perform(getUserRequest(ADMINISTRATOR.getId(), USER.getId()))
-                .andExpect(status().is2xxSuccessful());
+        final var expected = USER;
+        final var contentAsString = fMockMvc.perform(getUserRequest(ADMINISTRATOR.getId(), expected.getId()))
+                .andExpect(status().is2xxSuccessful())
+                .andReturn().getResponse().getContentAsString();
+        final var actual = USER_SERIALIZER.deserialize(contentAsString);
+        Assertions.assertEquals(expected.getId(), actual.getId());
+        Assertions.assertEquals(expected.getName(), actual.getName());
+        Assertions.assertEquals(expected.getPhone(), actual.getPhone());
+        Assertions.assertEquals(expected.getEmail(), actual.getEmail());
     }
 
     @Test
@@ -121,8 +135,15 @@ class ControllerTest extends TestBase {
 
     @Test
     void testUpdateUserWhenRequesterIsUpdatingOwnDetails() throws Exception {
-        fMockMvc.perform(updateUserRequest(USER.getId(), USER.getId(), new UpdateUserDto("Mike Selby", "8765436548", "selby@mark.com")))
-                .andExpect(status().is2xxSuccessful());
+        final var expected = new UpdateUserDto("Mike Selby", "8765436548", "selby@mark.com");
+        final var contentAsString = fMockMvc.perform(updateUserRequest(USER.getId(), USER.getId(), expected))
+                .andExpect(status().is2xxSuccessful())
+                .andReturn().getResponse().getContentAsString();
+        final var actual = USER_SERIALIZER.deserialize(contentAsString);
+        Assertions.assertEquals(USER.getId(), actual.getId());
+        Assertions.assertEquals(expected.getName(), actual.getName());
+        Assertions.assertEquals(expected.getPhone(), actual.getPhone());
+        Assertions.assertEquals(expected.getEmail(), actual.getEmail());
     }
 
     @Test
