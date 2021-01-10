@@ -9,9 +9,7 @@ import com.atul.gitbook.learn.utils.Serializers;
 import org.postgresql.util.PGobject;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.support.JdbcDaoSupport;
 
-import javax.sql.DataSource;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -19,23 +17,24 @@ import java.sql.SQLException;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 
-public class PostgresRepository extends JdbcDaoSupport implements IUserRepository {
+public class PostgresRepository extends IUserRepository {
 
+    private final UserRepositoryJdbcDaoSupport fJdbcDaoSupport;
     private final String fCreateUserSproc;
     private final String fGetUserSproc;
 
     private final Serializer<UserDto> SERIALIZER_USER_DTO = Serializers.newJsonSerializer(UserDto.class);
 
-    public PostgresRepository(DataSource dataSource,
+    public PostgresRepository(UserRepositoryJdbcDaoSupport jdbcDaoSupport,
                               String createUserSproc,
                               String getUserSproc) {
-        setDataSource(dataSource);
-        this.fCreateUserSproc = createUserSproc;
-        this.fGetUserSproc = getUserSproc;
-        createUser(UUID.fromString("f994c61d-ebd1-463c-a8d8-ebe5989aa501"),
-                new UserDto("King Kong", "9999999999", "king@kong.com", true));
-        createUser(UUID.fromString("1109a8c8-49a3-4921-aa80-65e730d587fe"),
-                new UserDto("David Marshal", "9999999999", "david@marshall.com", false));
+        fJdbcDaoSupport = jdbcDaoSupport;
+        fCreateUserSproc = createUserSproc;
+        fGetUserSproc = getUserSproc;
+        setDefaultAdministrator(createUserIfNotPresent(UUID.fromString("f994c61d-ebd1-463c-a8d8-ebe5989aa501"),
+                new UserDto("King Kong", "9999999999", "king@kong.com", true)));
+        setDefaultUser(createUserIfNotPresent(UUID.fromString("1109a8c8-49a3-4921-aa80-65e730d587fe"),
+                new UserDto("David Marshal", "9999999999", "david@marshall.com", false)));
     }
 
     @Override
@@ -46,7 +45,7 @@ public class PostgresRepository extends JdbcDaoSupport implements IUserRepositor
     private User createUser(UUID userId, UserDto userDto) {
         try {
             final var createUserCallableStatement = generateCreateUserCallableStatement(userId.toString(),
-                    userDto, fCreateUserSproc, SERIALIZER_USER_DTO, getConnection());
+                    userDto, fCreateUserSproc, SERIALIZER_USER_DTO, fJdbcDaoSupport.getConn());
             createUserCallableStatement.execute();
             return getUser(userId);
         } catch (SQLException e) {
@@ -55,11 +54,19 @@ public class PostgresRepository extends JdbcDaoSupport implements IUserRepositor
         }
     }
 
+    private User createUserIfNotPresent(UUID userId, UserDto userDto) {
+        try {
+            return getUser(userId);
+        } catch (NoSuchElementException e) {
+            return createUser(userId, userDto);
+        }
+    }
+
     @Override
     public User getUser(UUID id) {
         final PreparedStatementCreator getUserCallableStatement = (Connection connection) ->
                 generateGetUserCallableStatement(id.toString(), fGetUserSproc, connection);
-        final var userList = getJdbcTemplate().query(getUserCallableStatement, getUserRowMapper());
+        final var userList = fJdbcDaoSupport.getJdbcTemplate().query(getUserCallableStatement, getUserRowMapper());
         final var user = userList.stream().findFirst();
         if (user.isPresent())
             return user.get();

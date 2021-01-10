@@ -13,11 +13,12 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.util.UUID;
 
-import static com.atul.gitbook.learn.users.service.impl.InMemoryRepository.ADMINISTRATOR;
-import static com.atul.gitbook.learn.users.service.impl.InMemoryRepository.USER;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class ControllerTest extends TestBase {
+
+    @Autowired
+    private IUserRepository fUserRepository;
 
     @Autowired
     private WebApplicationContext fAppContext;
@@ -43,14 +44,14 @@ class ControllerTest extends TestBase {
 
     @Test
     void testCreateUserWhenRequesterExistsButIsNotAdministrator() throws Exception {
-        fMockMvc.perform(createUserRequest(USER.getId(), new UserDto("Mike Selby", "8765436548", "selby@mark.com")))
+        fMockMvc.perform(createUserRequest(fUserRepository.getDefaultUser().getId(), new UserDto("Mike Selby", "8765436548", "selby@mark.com")))
                 .andExpect(status().isForbidden());
     }
 
     @Test
     void testCreateUserWhenRequesterIsAdministrator() throws Exception {
         final var expected = new UserDto("Mike Selby", "8765436548", "selby@mark.com");
-        final var contentAsString = fMockMvc.perform(createUserRequest(ADMINISTRATOR.getId(), expected))
+        final var contentAsString = fMockMvc.perform(createUserRequest(fUserRepository.getDefaultAdministrator().getId(), expected))
                 .andExpect(status().is2xxSuccessful())
                 .andReturn().getResponse().getContentAsString();
         final var actual = USER_SERIALIZER.deserialize(contentAsString);
@@ -79,13 +80,13 @@ class ControllerTest extends TestBase {
 
     @Test
     void testGetUserWhenRequesterIsDifferentFromUser() throws Exception {
-        fMockMvc.perform(getUserRequest(USER.getId(), UUID.randomUUID()))
+        fMockMvc.perform(getUserRequest(fUserRepository.getDefaultUser().getId(), UUID.randomUUID()))
                 .andExpect(status().isForbidden());
     }
 
     @Test
     void testGetUserWhenRequesterIsFetchingOwnDetails() throws Exception {
-        final var expected = USER;
+        final var expected = fUserRepository.getDefaultUser();
         final var contentAsString = fMockMvc.perform(getUserRequest(expected.getId(), expected.getId()))
                 .andExpect(status().is2xxSuccessful())
                 .andReturn().getResponse().getContentAsString();
@@ -98,8 +99,8 @@ class ControllerTest extends TestBase {
 
     @Test
     void testGetUserWhenRequesterIsAdministratorAndUserIsPresent() throws Exception {
-        final var expected = USER;
-        final var contentAsString = fMockMvc.perform(getUserRequest(ADMINISTRATOR.getId(), expected.getId()))
+        final var expected = fUserRepository.getDefaultUser();
+        final var contentAsString = fMockMvc.perform(getUserRequest(fUserRepository.getDefaultAdministrator().getId(), expected.getId()))
                 .andExpect(status().is2xxSuccessful())
                 .andReturn().getResponse().getContentAsString();
         final var actual = USER_SERIALIZER.deserialize(contentAsString);
@@ -129,18 +130,18 @@ class ControllerTest extends TestBase {
 
     @Test
     void testUpdateUserWhenRequestIsDifferentFromUser() throws Exception {
-        fMockMvc.perform(updateUserRequest(USER.getId(), UUID.randomUUID(), new UpdateUserDto("Mike Selby", "8765436548", "selby@mark.com")))
+        fMockMvc.perform(updateUserRequest(fUserRepository.getDefaultUser().getId(), UUID.randomUUID(), new UpdateUserDto("Mike Selby", "8765436548", "selby@mark.com")))
                 .andExpect(status().isForbidden());
     }
 
     @Test
     void testUpdateUserWhenRequesterIsUpdatingOwnDetails() throws Exception {
         final var expected = new UpdateUserDto("Mike Selby", "8765436548", "selby@mark.com");
-        final var contentAsString = fMockMvc.perform(updateUserRequest(USER.getId(), USER.getId(), expected))
+        final var contentAsString = fMockMvc.perform(updateUserRequest(fUserRepository.getDefaultUser().getId(), fUserRepository.getDefaultUser().getId(), expected))
                 .andExpect(status().is2xxSuccessful())
                 .andReturn().getResponse().getContentAsString();
         final var actual = USER_SERIALIZER.deserialize(contentAsString);
-        Assertions.assertEquals(USER.getId(), actual.getId());
+        Assertions.assertEquals(fUserRepository.getDefaultUser().getId(), actual.getId());
         Assertions.assertEquals(expected.getName(), actual.getName());
         Assertions.assertEquals(expected.getPhone(), actual.getPhone());
         Assertions.assertEquals(expected.getEmail(), actual.getEmail());
@@ -166,14 +167,14 @@ class ControllerTest extends TestBase {
 
     @Test
     void testDeleteUserWhenRequesterIsDifferentFromUser() throws Exception {
-        fMockMvc.perform(deleteUserRequest(USER.getId(), UUID.randomUUID()))
+        fMockMvc.perform(deleteUserRequest(fUserRepository.getDefaultUser().getId(), UUID.randomUUID()))
                 .andExpect(status().isForbidden());
     }
 
     @Test
     void testDeleteUserWhenRequestIsDeletingOwnProfile() throws Exception {
         final var userDto = new UserDto("Mike Selby", "8765436548", "selby@mark.com");
-        final var contentAsString = fMockMvc.perform(createUserRequest(ADMINISTRATOR.getId(), userDto))
+        final var contentAsString = fMockMvc.perform(createUserRequest(fUserRepository.getDefaultAdministrator().getId(), userDto))
                 .andExpect(status().is2xxSuccessful())
                 .andReturn().getResponse().getContentAsString();
         final var user = USER_SERIALIZER.deserialize(contentAsString);
