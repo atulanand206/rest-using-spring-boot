@@ -19,4 +19,10 @@ public class Preconditions {
             throw new IllegalArgumentException();
         }
     }
+
+    public static void validateIsTrue(boolean expression, String message) {
+        if (!expression) {
+            throw new IllegalArgumentException(message);
+        }
+    }
 }

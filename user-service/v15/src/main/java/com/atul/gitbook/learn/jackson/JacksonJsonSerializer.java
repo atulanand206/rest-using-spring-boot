@@ -1,4 +1,4 @@
-package com.atul.gitbook.learn.utils;
+package com.atul.gitbook.learn.jackson;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;

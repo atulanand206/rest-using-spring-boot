@@ -11,18 +11,32 @@ public abstract class IUserRepository {
     private User fAdministrator;
     private User fUser;
 
+    /**
+     * @return the default administrator account. Used for creation of new users and is used in the tests.
+     */
     public User getDefaultAdministrator() {
         return fAdministrator;
     }
 
+    /**
+     * @return the default user account. Used in tests.
+     */
     public User getDefaultUser() {
         return fUser;
     }
 
+    /**
+     * This must be set when a new repository is introduced, else the tests will fail.
+     * @param administrator the default administrator account.
+     */
     protected void setDefaultAdministrator(User administrator) {
         this.fAdministrator = administrator;
     }
 
+    /**
+     * This must be set when a new repository is introduced, else the tests will fail.
+     * @param user the default user account.
+     */
     protected void setDefaultUser(User user) {
         this.fUser = user;
     }

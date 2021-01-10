@@ -1,4 +1,4 @@
-package com.atul.gitbook.learn.utils;
+package com.atul.gitbook.learn.jackson;
 
 /**
  * A generic serialization interface that supports serializing and deserializing to and from text.
