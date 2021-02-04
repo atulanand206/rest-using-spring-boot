@@ -35,4 +35,5 @@
   * [Update User](persistent-database-1/update-user.md)
   * [Delete User](persistent-database-1/delete-user.md)
   * [Refactor](persistent-database-1/refactor-1.md)
+* [Final Words](final-words.md)
 
