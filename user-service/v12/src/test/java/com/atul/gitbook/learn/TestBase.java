@@ -1,10 +1,10 @@
 package com.atul.gitbook.learn;
 
+import com.atul.gitbook.learn.jackson.Serializer;
+import com.atul.gitbook.learn.jackson.Serializers;
 import com.atul.gitbook.learn.users.models.UpdateUserDto;
 import com.atul.gitbook.learn.users.models.User;
 import com.atul.gitbook.learn.users.models.UserDto;
-import com.atul.gitbook.learn.utils.Serializer;
-import com.atul.gitbook.learn.utils.Serializers;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;

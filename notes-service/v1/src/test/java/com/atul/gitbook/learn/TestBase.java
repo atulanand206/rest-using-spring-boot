@@ -5,7 +5,10 @@ import com.atul.gitbook.learn.jackson.Serializers;
 import com.atul.gitbook.learn.users.models.UpdateUserDto;
 import com.atul.gitbook.learn.users.models.User;
 import com.atul.gitbook.learn.users.models.UserDto;
+import com.atul.gitbook.learn.users.service.IUserRepository;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.TestInstance;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,8 +16,11 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.lang.Nullable;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.util.UUID;
 
@@ -32,6 +38,19 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
         classes = {AppConfig.class, TestContainerConfig.class})
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class TestBase {
+
+    @Autowired
+    protected IUserRepository fUserRepository;
+
+    @Autowired
+    private WebApplicationContext fAppContext;
+
+    protected MockMvc fMockMvc;
+
+    @BeforeAll
+    void setUp() {
+        fMockMvc = MockMvcBuilders.webAppContextSetup(fAppContext).build();
+    }
 
     protected static final Serializer<User> USER_SERIALIZER = Serializers.newJsonSerializer(User.class);
 
