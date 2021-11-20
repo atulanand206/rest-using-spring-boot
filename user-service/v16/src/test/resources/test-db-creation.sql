@@ -1,0 +1,5 @@
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+SET timezone TO 'UTC';
+
+CREATE USER learn_crud WITH PASSWORD 'learn_crud@123';
+ALTER USER learn_crud WITH SUPERUSER;
